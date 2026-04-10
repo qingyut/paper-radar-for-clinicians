@@ -1,4 +1,4 @@
-# paper-radar
+# paper-radar-for-clinicians
 
 <p align="left">
   <img alt="Python" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white">
@@ -13,7 +13,9 @@
 paper-radar is a lightweight monitoring tool for researchers and clinicians who want a cleaner way to track recent papers, review them quickly, and share the results as a presentable report.
 
 <p align="center">
-  <img src="./docs/report-preview.png" alt="paper-radar report preview" width="92%">
+  <img src="./outputs/snipaste/1.png" alt="paper-radar report preview" width="92%">
+  <img src="./outputs/snipaste/2.png" alt="paper-radar report preview" width="92%">
+  <img src="./outputs/snipaste/3.png" alt="paper-radar report preview" width="92%">
 </p>
 
 ## What it does
@@ -209,7 +211,3 @@ configs/topics.example.yml
 A clinician-friendly Chinese quickstart is available here:
 
 - [docs/quickstart_zh.md](./docs/quickstart_zh.md)
-
-## License
-
-Add your preferred license here.
