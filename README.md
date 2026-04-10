@@ -10,12 +10,10 @@
 
 **MeSH-aware literature monitoring for PubMed and arXiv, with transparent ranking and polished HTML reports.**
 
-paper-radar is a lightweight monitoring tool for researchers and clinicians who want a cleaner way to track recent papers, review them quickly, and share the results as a presentable report.
+paper-radar-for-clinicians is a lightweight monitoring tool for clinicians who want a cleaner way to track recent papers, review them quickly, and share the results as a presentable report.
 
 <p align="center">
-  <img src="./outputs/snipaste/1.png" alt="paper-radar report preview" width="92%">
   <img src="./outputs/snipaste/2.png" alt="paper-radar report preview" width="92%">
-  <img src="./outputs/snipaste/3.png" alt="paper-radar report preview" width="92%">
 </p>
 
 ## What it does
@@ -30,17 +28,6 @@ paper-radar is a lightweight monitoring tool for researchers and clinicians who 
 - optionally sends **email digests**
 - supports **weekly scheduled updates**
 
-## Why this exists
-
-Most literature monitoring workflows break down in one of three ways: the query logic is too brittle, the ranking logic is opaque, or the output is too ugly to share.
-
-paper-radar is built around a more practical loop:
-
-1. write the query the way people actually search
-2. pull recent papers from official sources
-3. rank them with editable rules
-4. generate a report that is easy to browse and easy to forward
-
 ## Core features
 
 ### MeSH-aware expansion
@@ -48,13 +35,6 @@ paper-radar is built around a more practical loop:
 For biomedical topics, paper-radar can expand terms using official MeSH descriptors and entry terms instead of relying only on raw keyword matching.
 
 ### Familiar grouped query syntax
-
-The query string supports a search style that feels close to real literature searching:
-
-- **OR inside each group**
-- **AND between groups**
-- **parentheses**
-- **quoted phrases**
 
 Example:
 
@@ -177,10 +157,6 @@ python -m paper_radar.cli report "multimodal imaging" \
   --email-to "recipient@example.com"
 ```
 
-For a Chinese clinician-facing setup guide, including a QQ Mail SMTP example, see:
-
-- [docs/quickstart_zh.md](./docs/quickstart_zh.md)
-
 ## Configuration
 
 ### Ranking weights
@@ -199,15 +175,4 @@ Edit:
 configs/topics.example.yml
 ```
 
-## Notes
-
-- PubMed querying uses official NCBI E-utilities.
-- arXiv querying uses the official arXiv API.
-- MeSH expansion uses official MeSH data / endpoints.
-- This project is intended for monitoring and triage, not as a replacement for formal systematic review methodology.
-
-## For clinicians / 中文快速说明
-
-A clinician-friendly Chinese quickstart is available here:
-
-- [docs/quickstart_zh.md](./docs/quickstart_zh.md)
+A clinician-friendly Chinese quickstart is available(quickstart_zh.md).
