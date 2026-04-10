@@ -1,0 +1,11 @@
+topics:
+  - keyword: "biliary stricture"
+    days: 30
+    max_results_pubmed: 120
+    max_results_arxiv: 80
+    out_slug: "biliary_stricture"
+  - keyword: "gallbladder cancer radiomics"
+    days: 30
+    max_results_pubmed: 120
+    max_results_arxiv: 80
+    out_slug: "gbc_radiomics"

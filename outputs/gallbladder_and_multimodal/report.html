@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>paper-radar • (gallbladder) AND (multimodal)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: #111a2b;
+      --paper: #ffffff;
+      --text-dark: #0f172a;
+      --muted: #475569;
+      --pubmed: #1d4ed8;
+      --arxiv: #7c3aed;
+      --accent: #0f766e;
+      --surface: rgba(255,255,255,.84);
+      --surface-strong: rgba(255,255,255,.96);
+      --border: rgba(148,163,184,.18);
+      --radius: 24px;
+      --shadow-lg: 0 28px 70px rgba(15,23,42,.14);
+      --shadow-md: 0 16px 40px rgba(15,23,42,.10);
+      --shadow-sm: 0 10px 24px rgba(15,23,42,.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-dark);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(37,99,235,.16), transparent 28%),
+        radial-gradient(circle at 85% 8%, rgba(124,58,237,.14), transparent 22%),
+        radial-gradient(circle at 50% 110%, rgba(20,184,166,.14), transparent 26%),
+        linear-gradient(180deg, #eef2ff 0%, #f8fafc 24%, #f8fafc 100%);
+    }
+    a { color: inherit; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(11,18,32,1) 0%, rgba(23,37,84,.98) 52%, rgba(15,118,110,.92) 100%),
+        var(--bg);
+      color: white;
+      padding: 64px 24px 46px;
+      border-bottom-left-radius: 34px;
+      border-bottom-right-radius: 34px;
+      box-shadow: var(--shadow-lg);
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(22px);
+      opacity: .34;
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 320px;
+      height: 320px;
+      right: -80px;
+      top: -90px;
+      background: rgba(96,165,250,.42);
+    }
+    .hero::after {
+      width: 260px;
+      height: 260px;
+      left: -60px;
+      bottom: -80px;
+      background: rgba(45,212,191,.26);
+    }
+    .hero-inner, .container {
+      max-width: 1220px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.86);
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(14px);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.84);
+      font-size: 12px;
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 5.5vw, 60px);
+      line-height: 1.02;
+      letter-spacing: -.03em;
+      max-width: 960px;
+    }
+    .subtitle {
+      max-width: 860px;
+      font-size: 18px;
+      line-height: 1.65;
+      color: rgba(255,255,255,.86);
+    }
+    .hero-summary {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 14px;
+    }
+    .hero-stat {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(14px);
+      min-height: 92px;
+    }
+    .hero-stat-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .10em;
+      color: rgba(255,255,255,.66);
+    }
+    .hero-stat-value {
+      margin-top: 10px;
+      font-size: 30px;
+      font-weight: 760;
+      letter-spacing: -.03em;
+    }
+    .container {
+      padding: 30px 24px 54px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+    .card {
+      grid-column: span 12;
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+      backdrop-filter: blur(18px);
+    }
+    .card.soft {
+      background: var(--surface);
+    }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 23px;
+      letter-spacing: -.02em;
+    }
+    .section-kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .10em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .helper {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+      max-width: 70ch;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .metric {
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(248,250,252,.82));
+      border: 1px solid rgba(148,163,184,.14);
+      box-shadow: var(--shadow-sm);
+    }
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .metric-value {
+      margin-top: 10px;
+      font-size: 30px;
+      font-weight: 760;
+      letter-spacing: -.03em;
+    }
+    .metric-foot {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(15,23,42,.05);
+      color: var(--text-dark);
+      border: 1px solid rgba(148,163,184,.16);
+    }
+    .source-pubmed { background: rgba(37,99,235,.11); color: #1d4ed8; border-color: rgba(37,99,235,.14); }
+    .source-arxiv { background: rgba(124,58,237,.11); color: #6d28d9; border-color: rgba(124,58,237,.15); }
+    .weight-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .weight-table th, .weight-table td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(148,163,184,.16);
+      vertical-align: top;
+    }
+    .weight-table th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .weight-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(148,163,184,.16);
+      overflow: hidden;
+      min-width: 120px;
+    }
+    .weight-bar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(37,99,235,.85), rgba(20,184,166,.85));
+    }
+    .trend-frame {
+      border-radius: 20px;
+      border: 1px solid rgba(148,163,184,.16);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(248,250,252,.95), rgba(255,255,255,1));
+      padding: 8px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    .trend-frame > div { width: 100%; }
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 16px;
+    }
+    .highlight-card {
+      border-radius: 20px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(248,250,252,.84));
+      border: 1px solid rgba(148,163,184,.16);
+      box-shadow: var(--shadow-sm);
+      min-height: 220px;
+    }
+    .paper-item {
+      padding: 20px 0;
+      border-top: 1px solid rgba(148,163,184,.16);
+    }
+    .paper-item:first-child { border-top: none; padding-top: 0; }
+    .paper-title {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.32;
+      letter-spacing: -.02em;
+    }
+    .paper-title a {
+      color: var(--text-dark);
+      text-decoration: none;
+    }
+    .paper-title a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .abstract-callout {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(241,245,249,.70), rgba(248,250,252,.92));
+      border: 1px solid rgba(148,163,184,.15);
+      color: var(--text-dark);
+      line-height: 1.7;
+    }
+    .score-box {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .score-pill {
+      background: rgba(15,23,42,.04);
+      border: 1px solid rgba(148,163,184,.14);
+      border-radius: 14px;
+      padding: 11px 12px;
+    }
+    .score-pill div:first-child {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    .score-pill div:last-child {
+      font-size: 18px;
+      font-weight: 760;
+      letter-spacing: -.02em;
+    }
+    .footer-note {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+      text-align: center;
+    }
+    @media (min-width: 980px) {
+      .span-7 { grid-column: span 7; }
+      .span-5 { grid-column: span 5; }
+      .span-8 { grid-column: span 8; }
+      .span-4 { grid-column: span 4; }
+    }
+    @media (max-width: 980px) {
+      .hero-summary,
+      .metrics,
+      .score-box,
+      .highlight-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 700px) {
+      .hero { padding-top: 42px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+      .container { padding: 22px 16px 42px; }
+      .card { padding: 18px; border-radius: 20px; }
+      .hero-summary,
+      .metrics,
+      .score-box,
+      .highlight-grid { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(30px, 12vw, 46px); }
+      .paper-title { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-topbar">
+        <div class="eyebrow">Transparent literature radar</div>
+        <div class="hero-badge">PubMed + arXiv • MeSH-expanded • ranked with editable weights</div>
+      </div>
+      <h1>(gallbladder) AND (multimodal)</h1>
+      <div class="subtitle">
+        Recent literature surveillance across official PubMed and arXiv interfaces, with MeSH-aware expansion, transparent weighted ranking, and one-line method or innovation summaries for faster scanning.
+      </div>
+
+      <div class="hero-summary">
+        <div class="hero-stat">
+          <div class="hero-stat-label">Records shown</div>
+          <div class="hero-stat-value">3</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-label">Highlights</div>
+          <div class="hero-stat-value">3</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-label">PubMed share</div>
+          <div class="hero-stat-value">3</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-label">arXiv share</div>
+          <div class="hero-stat-value">0</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="grid">
+      <div class="card span-7">
+        <div class="section-kicker">Query design</div>
+        <div class="card-header">
+          <h2>Search expansion</h2>
+          <div class="chip">Original keyword: (gallbladder) AND (multimodal)</div>
+          <div class="chip">Query mode: grouped</div>
+        </div>
+        <div class="helper">
+          This report expands the query with official MeSH descriptor and entry terms when available, then keeps the original free-text keyword to preserve retrieval breadth.
+        </div>
+        <div class="chip-row">
+            <span class="chip">Gallbladder</span>
+            <span class="chip">Gallbladders</span>
+            <span class="chip">Multimodal Imaging</span>
+            <span class="chip">Imaging, Hybrid</span>
+            <span class="chip">Hybrid Imaging</span>
+            <span class="chip">Imaging, Multimodal</span>
+        </div>
+      </div>
+
+      <div class="card span-5 soft">
+        <div class="section-kicker">Transparent scoring</div>
+        <div class="card-header">
+          <h2>Score weights</h2>
+        </div>
+        <table class="weight-table">
+          <thead><tr><th>Component</th><th>Weight</th><th>Visual</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>relevance</td>
+              <td>0.50</td>
+              <td><div class="weight-bar"><span style="width: 50.0%"></span></div></td>
+            </tr>
+            <tr>
+              <td>coverage</td>
+              <td>0.18</td>
+              <td><div class="weight-bar"><span style="width: 18.0%"></span></div></td>
+            </tr>
+            <tr>
+              <td>freshness</td>
+              <td>0.14</td>
+              <td><div class="weight-bar"><span style="width: 14.0%"></span></div></td>
+            </tr>
+            <tr>
+              <td>evidence</td>
+              <td>0.10</td>
+              <td><div class="weight-bar"><span style="width: 10.0%"></span></div></td>
+            </tr>
+            <tr>
+              <td>source</td>
+              <td>0.06</td>
+              <td><div class="weight-bar"><span style="width: 6.0%"></span></div></td>
+            </tr>
+            <tr>
+              <td>completeness</td>
+              <td>0.02</td>
+              <td><div class="weight-bar"><span style="width: 2.0%"></span></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-kicker">At a glance</div>
+        <div class="card-header">
+          <h2>Monitoring snapshot</h2>
+          <div class="helper">Use this section to sanity-check whether the query is too narrow, too broad, or over-tilted toward one source.</div>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Total records</div>
+            <div class="metric-value">3</div>
+            <div class="metric-foot">Normalized and deduplicated papers included in this report.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Top highlight count</div>
+            <div class="metric-value">3</div>
+            <div class="metric-foot">Fast-scan shortlist for immediate reading.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">PubMed in top list</div>
+            <div class="metric-value">3</div>
+            <div class="metric-foot">Structured biomedical records from NCBI.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">arXiv in top list</div>
+            <div class="metric-value">0</div>
+            <div class="metric-foot">Recent preprints surfaced through the official arXiv API.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-kicker">Recent activity</div>
+        <div class="card-header">
+          <h2>Publication trend</h2>
+          <div class="helper">Daily stacked counts plus a 7-day rolling mean for a cleaner sense of momentum.</div>
+        </div>
+        <div class="trend-frame">
+          <div>                        <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.5.0.min.js" integrity="sha256-fHbNLP+GlIXN+efbQec78UkemUz3NJp7UmfGxC1tNxs=" crossorigin="anonymous"></script>                <div id="7aba8b0e-2864-4461-8b70-3dd0fbc96471" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("7aba8b0e-2864-4461-8b70-3dd0fbc96471")) {                    Plotly.newPlot(                        "7aba8b0e-2864-4461-8b70-3dd0fbc96471",                        [{"hovertemplate":"Date=%{x}\u003cbr\u003ePubMed=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#1d4ed8","line":{"color":"rgba(255,255,255,0.9)","width":1},"pattern":{"shape":""}},"name":"PubMed","opacity":0.92,"x":["2026-03-26","2026-04-01"],"y":{"dtype":"i1","bdata":"AQI="},"type":"bar"},{"hovertemplate":"Date=%{x}\u003cbr\u003eRolling mean=%{y:.2f}\u003cextra\u003e\u003c\u002fextra\u003e","line":{"color":"#0f766e","shape":"spline","smoothing":0.55,"width":4},"marker":{"color":"#0f766e","line":{"color":"white","width":1.5},"size":7},"mode":"lines+markers","name":"7-day rolling mean","x":["2026-03-26","2026-04-01"],"y":{"dtype":"f8","bdata":"AAAAAAAA8D8AAAAAAAD4Pw=="},"yaxis":"y2","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"title":{"font":{"size":24,"color":"#0f172a"},"text":"Recent publication volume","x":0.01,"xanchor":"left"},"font":{"color":"#0f172a","family":"Inter, Segoe UI, Arial, sans-serif"},"legend":{"orientation":"h","yanchor":"bottom","y":1.02,"xanchor":"right","x":1.0,"bgcolor":"rgba(255,255,255,0.75)","bordercolor":"rgba(148,163,184,0.18)","borderwidth":1},"margin":{"l":30,"r":30,"t":80,"b":30},"xaxis":{"title":{},"showgrid":false,"tickangle":-25,"showline":false,"zeroline":false},"yaxis":{"title":{"text":"Papers per day"},"showgrid":true,"gridcolor":"rgba(148,163,184,0.18)","zeroline":false,"rangemode":"tozero"},"yaxis2":{"title":{"text":"7-day rolling mean"},"overlaying":"y","side":"right","showgrid":false,"zeroline":false,"rangemode":"tozero"},"hoverlabel":{"font":{"color":"white"},"bgcolor":"rgba(15,23,42,0.94)","bordercolor":"rgba(15,23,42,0.94)"},"barmode":"stack","paper_bgcolor":"rgba(255,255,255,0)","plot_bgcolor":"white","hovermode":"x unified"},                        {"displayModeBar": false, "responsive": true, "scrollZoom": false}                    )                };            </script>        </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-kicker">Shortlist</div>
+        <div class="card-header">
+          <h2>Top highlights</h2>
+          <div class="helper">These cards are tuned for presentation use: title, provenance, ranking score, and one-sentence methodological gist.</div>
+        </div>
+        <div class="highlight-grid">
+          <div class="highlight-card">
+            <div class="meta">
+              <span class="chip source-pubmed">pubmed</span>
+              <span>2026 Apr</span>
+              <span>score 0.863</span>
+            </div>
+            <h3 class="paper-title">
+              <a href="https://pubmed.ncbi.nlm.nih.gov/41938441/" target="_blank" rel="noopener">Acute cholangitis due to a Type IV Mirizzi syndrome management strategy of a rare condition: a case report.</a>
+            </h3>
+            <div class="small"><strong>Venue:</strong> International journal of surgery case reports</div>
+            <div class="abstract-callout">Method/innovation: INTRODUCTION: Mirizzi syndrome (MS) is a rare complication of chronic cholelithiasis, resulting from an impacted gallstone in the cystic duct or gallbladder neck, leading to common hepatic duct obstruction.</div>
+          </div>
+          <div class="highlight-card">
+            <div class="meta">
+              <span class="chip source-pubmed">pubmed</span>
+              <span>2026 Apr 01</span>
+              <span>score 0.790</span>
+            </div>
+            <h3 class="paper-title">
+              <a href="https://pubmed.ncbi.nlm.nih.gov/41627846/" target="_blank" rel="noopener">Prognostic Value of FDG PET/CT Parameters in Patients With Advanced Biliary Tract Cancer Receiving Gemcitabine, Cisplatin, and Nab-Paclitaxel.</a>
+            </h3>
+            <div class="small"><strong>Venue:</strong> Clinical nuclear medicine</div>
+            <div class="abstract-callout">Method/innovation: BACKGROUND: Although a phase 3 trial did not demonstrate a survival benefit for gemcitabine, cisplatin, and nab-paclitaxel (Gem/Cis/Nab-P) in advanced biliary tract cancer (BTC), favorable outcomes were observed in specific patient subgroups, notably those with locally advanced disease or gallbladder carcinoma (GBC).</div>
+          </div>
+          <div class="highlight-card">
+            <div class="meta">
+              <span class="chip source-pubmed">pubmed</span>
+              <span>2026 Mar 26</span>
+              <span>score 0.759</span>
+            </div>
+            <h3 class="paper-title">
+              <a href="https://pubmed.ncbi.nlm.nih.gov/41784166/" target="_blank" rel="noopener">Nitroimidazole-Containing [68Ga]Ga-IPM-N001 as a New CAIX-Targeting Radionuclide Tracer.</a>
+            </h3>
+            <div class="small"><strong>Venue:</strong> Journal of medicinal chemistry</div>
+            <div class="abstract-callout">Method: To enhance tumor uptake and pharmacokinetics, we designed a series of new bivalent CAIX-targeting probes by integrating a hypoxia-sensitive 2-nitroimidazole moiety into the DPI-4452 scaffold. Innovation: Among these, the new agent [68Ga]Ga-IPM-N001 demonstrated superior higher tumor uptake and significantly improved tumor-to-background ratios (T/K and T/L > 5.0) in the PET/CT imaging studies using OS-RC-2 tumor-bearing mice.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-kicker">Detailed ranking</div>
+        <div class="card-header">
+          <h2>Ranked papers</h2>
+          <div class="helper">Each paper includes a compact score breakdown so you can see why it rose or fell after weight changes.</div>
+        </div>
+        <div class="paper-item">
+          <div class="meta">
+            <span class="chip source-pubmed">pubmed</span>
+            <span>2026 Apr</span>
+            <span>score 0.863</span>
+<span>International journal of surgery case reports</span>          </div>
+          <h3 class="paper-title">
+            <a href="https://pubmed.ncbi.nlm.nih.gov/41938441/" target="_blank" rel="noopener">Acute cholangitis due to a Type IV Mirizzi syndrome management strategy of a rare condition: a case report.</a>
+          </h3>
+          <div class="small"><strong>Authors:</strong> Amine Sebai, Mahdi Hammami, Souhaib Atri, Ahmed Ben Mahmoud, Amine Daghfous, Montassar Kacem</div>
+          <div class="abstract-callout">Method/innovation: INTRODUCTION: Mirizzi syndrome (MS) is a rare complication of chronic cholelithiasis, resulting from an impacted gallstone in the cystic duct or gallbladder neck, leading to common hepatic duct obstruction.</div>
+          <div class="chip-row">
+              <span class="chip">gallbladder</span>
+              <span class="chip">Gallbladder</span>
+              <span class="chip">multimodal</span>
+              <span class="chip">Multimodal Imaging</span>
+          </div>
+          <div class="score-box">
+            <div class="score-pill"><div>Relevance</div><div>1.00</div></div>
+            <div class="score-pill"><div>Coverage</div><div>1.00</div></div>
+            <div class="score-pill"><div>Freshness</div><div>0.52</div></div>
+            <div class="score-pill"><div>Evidence</div><div>0.38</div></div>
+            <div class="score-pill"><div>Source</div><div>0.88</div></div>
+            <div class="score-pill"><div>Completeness</div><div>1.00</div></div>
+          </div>
+        </div>
+        <div class="paper-item">
+          <div class="meta">
+            <span class="chip source-pubmed">pubmed</span>
+            <span>2026 Apr 01</span>
+            <span>score 0.790</span>
+<span>Clinical nuclear medicine</span>          </div>
+          <h3 class="paper-title">
+            <a href="https://pubmed.ncbi.nlm.nih.gov/41627846/" target="_blank" rel="noopener">Prognostic Value of FDG PET/CT Parameters in Patients With Advanced Biliary Tract Cancer Receiving Gemcitabine, Cisplatin, and Nab-Paclitaxel.</a>
+          </h3>
+          <div class="small"><strong>Authors:</strong> Jeong Won Lee, Sang Mi Lee, Beodeul Kang, Jung Sun Kim, Jung Eun Kim, Hong Jae Chon, Su Jin Jang</div>
+          <div class="abstract-callout">Method/innovation: BACKGROUND: Although a phase 3 trial did not demonstrate a survival benefit for gemcitabine, cisplatin, and nab-paclitaxel (Gem/Cis/Nab-P) in advanced biliary tract cancer (BTC), favorable outcomes were observed in specific patient subgroups, notably those with locally advanced disease or gallbladder carcinoma (GBC).</div>
+          <div class="chip-row">
+              <span class="chip">gallbladder</span>
+              <span class="chip">Gallbladder</span>
+              <span class="chip">Multimodal Imaging</span>
+              <span class="chip">Imaging, Hybrid</span>
+              <span class="chip">Hybrid Imaging</span>
+              <span class="chip">Imaging, Multimodal</span>
+          </div>
+          <div class="score-box">
+            <div class="score-pill"><div>Relevance</div><div>0.81</div></div>
+            <div class="score-pill"><div>Coverage</div><div>1.00</div></div>
+            <div class="score-pill"><div>Freshness</div><div>0.52</div></div>
+            <div class="score-pill"><div>Evidence</div><div>0.60</div></div>
+            <div class="score-pill"><div>Source</div><div>0.88</div></div>
+            <div class="score-pill"><div>Completeness</div><div>1.00</div></div>
+          </div>
+        </div>
+        <div class="paper-item">
+          <div class="meta">
+            <span class="chip source-pubmed">pubmed</span>
+            <span>2026 Mar 26</span>
+            <span>score 0.759</span>
+<span>Journal of medicinal chemistry</span>          </div>
+          <h3 class="paper-title">
+            <a href="https://pubmed.ncbi.nlm.nih.gov/41784166/" target="_blank" rel="noopener">Nitroimidazole-Containing [68Ga]Ga-IPM-N001 as a New CAIX-Targeting Radionuclide Tracer.</a>
+          </h3>
+          <div class="small"><strong>Authors:</strong> Xiaoke Niu, Sixuan Cheng, Shengping Zhang, Hui Zhang, Kang Chen, Guanqiao Zhang, Yaqi Fu, Yichen Xu</div>
+          <div class="abstract-callout">Method: To enhance tumor uptake and pharmacokinetics, we designed a series of new bivalent CAIX-targeting probes by integrating a hypoxia-sensitive 2-nitroimidazole moiety into the DPI-4452 scaffold. Innovation: Among these, the new agent [68Ga]Ga-IPM-N001 demonstrated superior higher tumor uptake and significantly improved tumor-to-background ratios (T/K and T/L > 5.0) in the PET/CT imaging studies using OS-RC-2 tumor-bearing mice.</div>
+          <div class="chip-row">
+              <span class="chip">gallbladder</span>
+              <span class="chip">Gallbladder</span>
+              <span class="chip">Multimodal Imaging</span>
+              <span class="chip">Imaging, Hybrid</span>
+              <span class="chip">Hybrid Imaging</span>
+              <span class="chip">Imaging, Multimodal</span>
+          </div>
+          <div class="score-box">
+            <div class="score-pill"><div>Relevance</div><div>0.81</div></div>
+            <div class="score-pill"><div>Coverage</div><div>1.00</div></div>
+            <div class="score-pill"><div>Freshness</div><div>0.33</div></div>
+            <div class="score-pill"><div>Evidence</div><div>0.55</div></div>
+            <div class="score-pill"><div>Source</div><div>0.88</div></div>
+            <div class="score-pill"><div>Completeness</div><div>1.00</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Built from official PubMed, MeSH, and arXiv interfaces. Ranking is a transparent prioritization rule, not a claim of universal authority.
+    </div>
+  </main>
+</body>
+</html>

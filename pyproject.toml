@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paper-radar"
+version = "0.2.0"
+description = "MeSH-expanded PubMed + arXiv literature radar with transparent ranking, embedded report visuals, and weekly digests."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+  {name = "OpenAI - scaffolded for user customization"}
+]
+dependencies = [
+  "requests>=2.32.0,<3",
+  "pandas>=2.2.0,<3",
+  "plotly>=6.1.1,<7",
+  "typer>=0.12.0,<1",
+  "PyYAML>=6.0.0,<7",
+  "Jinja2>=3.1.0,<4",
+  "rich>=13.7.0,<14",
+]
+
+[project.scripts]
+paper-radar = "paper_radar.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["paper_radar"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/paper_radar",
+  "/configs",
+  "/tests",
+  "/README.md",
+  "/LICENSE",
+  "/pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

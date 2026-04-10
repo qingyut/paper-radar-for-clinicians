@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>paper-radar • {{ keyword }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    :root{
+      --bg: {{ theme.background }};
+      --card: {{ theme.card }};
+      --paper: {{ theme.paper }};
+      --text-dark: {{ theme.text_dark }};
+      --muted: {{ theme.text_muted }};
+      --pubmed: {{ theme.pubmed }};
+      --arxiv: {{ theme.arxiv }};
+      --accent: {{ theme.accent }};
+      --surface: rgba(255,255,255,.84);
+      --surface-strong: rgba(255,255,255,.96);
+      --border: rgba(148,163,184,.18);
+      --radius: 24px;
+      --shadow-lg: 0 28px 70px rgba(15,23,42,.14);
+      --shadow-md: 0 16px 40px rgba(15,23,42,.10);
+      --shadow-sm: 0 10px 24px rgba(15,23,42,.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-dark);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(37,99,235,.16), transparent 28%),
+        radial-gradient(circle at 85% 8%, rgba(124,58,237,.14), transparent 22%),
+        radial-gradient(circle at 50% 110%, rgba(20,184,166,.14), transparent 26%),
+        linear-gradient(180deg, #eef2ff 0%, #f8fafc 24%, #f8fafc 100%);
+    }
+    a { color: inherit; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(11,18,32,1) 0%, rgba(23,37,84,.98) 52%, rgba(15,118,110,.92) 100%),
+        var(--bg);
+      color: white;
+      padding: 64px 24px 46px;
+      border-bottom-left-radius: 34px;
+      border-bottom-right-radius: 34px;
+      box-shadow: var(--shadow-lg);
+    }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(22px);
+      opacity: .34;
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 320px;
+      height: 320px;
+      right: -80px;
+      top: -90px;
+      background: rgba(96,165,250,.42);
+    }
+    .hero::after {
+      width: 260px;
+      height: 260px;
+      left: -60px;
+      bottom: -80px;
+      background: rgba(45,212,191,.26);
+    }
+    .hero-inner, .container {
+      max-width: 1220px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.86);
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(14px);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.84);
+      font-size: 12px;
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 5.5vw, 60px);
+      line-height: 1.02;
+      letter-spacing: -.03em;
+      max-width: 960px;
+    }
+    .subtitle {
+      max-width: 860px;
+      font-size: 18px;
+      line-height: 1.65;
+      color: rgba(255,255,255,.86);
+    }
+    .hero-summary {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 14px;
+    }
+    .hero-stat {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(14px);
+      min-height: 92px;
+    }
+    .hero-stat-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .10em;
+      color: rgba(255,255,255,.66);
+    }
+    .hero-stat-value {
+      margin-top: 10px;
+      font-size: 30px;
+      font-weight: 760;
+      letter-spacing: -.03em;
+    }
+    .container {
+      padding: 30px 24px 54px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+    .card {
+      grid-column: span 12;
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+      backdrop-filter: blur(18px);
+    }
+    .card.soft {
+      background: var(--surface);
+    }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 23px;
+      letter-spacing: -.02em;
+    }
+    .section-kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .10em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .helper {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+      max-width: 70ch;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .metric {
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(248,250,252,.82));
+      border: 1px solid rgba(148,163,184,.14);
+      box-shadow: var(--shadow-sm);
+    }
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .metric-value {
+      margin-top: 10px;
+      font-size: 30px;
+      font-weight: 760;
+      letter-spacing: -.03em;
+    }
+    .metric-foot {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: rgba(15,23,42,.05);
+      color: var(--text-dark);
+      border: 1px solid rgba(148,163,184,.16);
+    }
+    .source-pubmed { background: rgba(37,99,235,.11); color: #1d4ed8; border-color: rgba(37,99,235,.14); }
+    .source-arxiv { background: rgba(124,58,237,.11); color: #6d28d9; border-color: rgba(124,58,237,.15); }
+    .weight-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .weight-table th, .weight-table td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(148,163,184,.16);
+      vertical-align: top;
+    }
+    .weight-table th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .weight-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(148,163,184,.16);
+      overflow: hidden;
+      min-width: 120px;
+    }
+    .weight-bar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(37,99,235,.85), rgba(20,184,166,.85));
+    }
+    .trend-frame {
+      border-radius: 20px;
+      border: 1px solid rgba(148,163,184,.16);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(248,250,252,.95), rgba(255,255,255,1));
+      padding: 8px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    .trend-frame > div { width: 100%; }
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 16px;
+    }
+    .highlight-card {
+      border-radius: 20px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(248,250,252,.84));
+      border: 1px solid rgba(148,163,184,.16);
+      box-shadow: var(--shadow-sm);
+      min-height: 220px;
+    }
+    .paper-item {
+      padding: 20px 0;
+      border-top: 1px solid rgba(148,163,184,.16);
+    }
+    .paper-item:first-child { border-top: none; padding-top: 0; }
+    .paper-title {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.32;
+      letter-spacing: -.02em;
+    }
+    .paper-title a {
+      color: var(--text-dark);
+      text-decoration: none;
+    }
+    .paper-title a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .abstract-callout {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(241,245,249,.70), rgba(248,250,252,.92));
+      border: 1px solid rgba(148,163,184,.15);
+      color: var(--text-dark);
+      line-height: 1.7;
+    }
+    .score-box {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .score-pill {
+      background: rgba(15,23,42,.04);
+      border: 1px solid rgba(148,163,184,.14);
+      border-radius: 14px;
+      padding: 11px 12px;
+    }
+    .score-pill div:first-child {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    .score-pill div:last-child {
+      font-size: 18px;
+      font-weight: 760;
+      letter-spacing: -.02em;
+    }
+    .footer-note {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+      text-align: center;
+    }
+    @media (min-width: 980px) {
+      .span-7 { grid-column: span 7; }
+      .span-5 { grid-column: span 5; }
+      .span-8 { grid-column: span 8; }
+      .span-4 { grid-column: span 4; }
+    }
+    @media (max-width: 980px) {
+      .hero-summary,
+      .metrics,
+      .score-box,
+      .highlight-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 700px) {
+      .hero { padding-top: 42px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+      .container { padding: 22px 16px 42px; }
+      .card { padding: 18px; border-radius: 20px; }
+      .hero-summary,
+      .metrics,
+      .score-box,
+      .highlight-grid { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(30px, 12vw, 46px); }
+      .paper-title { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-topbar">
+        <div class="eyebrow">Transparent literature radar</div>
+        <div class="hero-badge">PubMed + arXiv • MeSH-expanded • ranked with editable weights</div>
+      </div>
+      <h1>{{ keyword }}</h1>
+      <div class="subtitle">
+        Recent literature surveillance across official PubMed and arXiv interfaces, with MeSH-aware expansion, transparent weighted ranking, and one-line method or innovation summaries for faster scanning.
+      </div>
+
+      <div class="hero-summary">
+        <div class="hero-stat">
+          <div class="hero-stat-label">Records shown</div>
+          <div class="hero-stat-value">{{ papers|length }}</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-label">Highlights</div>
+          <div class="hero-stat-value">{{ highlights|length }}</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-label">PubMed share</div>
+          <div class="hero-stat-value">{{ papers|selectattr("source", "equalto", "pubmed")|list|length }}</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-label">arXiv share</div>
+          <div class="hero-stat-value">{{ papers|selectattr("source", "equalto", "arxiv")|list|length }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="grid">
+      <div class="card span-7">
+        <div class="section-kicker">Query design</div>
+        <div class="card-header">
+          <h2>Search expansion</h2>
+          <div class="chip">Original keyword: {{ expanded_query.original_keyword }}</div>
+          <div class="chip">Query mode: {{ expanded_query.query_mode }}</div>
+        </div>
+        <div class="helper">
+          This report expands the query with official MeSH descriptor and entry terms when available, then keeps the original free-text keyword to preserve retrieval breadth.
+        </div>
+        {% if expanded_query.mesh_descriptor %}
+        <div class="abstract-callout" style="margin-top:16px;">
+          <strong>MeSH descriptor:</strong> {{ expanded_query.mesh_descriptor }}
+        </div>
+        {% endif %}
+        {% if expanded_query.mesh_terms %}
+        <div class="chip-row">
+          {% for term in expanded_query.mesh_terms %}
+            <span class="chip">{{ term }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="card span-5 soft">
+        <div class="section-kicker">Transparent scoring</div>
+        <div class="card-header">
+          <h2>Score weights</h2>
+        </div>
+        <table class="weight-table">
+          <thead><tr><th>Component</th><th>Weight</th><th>Visual</th></tr></thead>
+          <tbody>
+            {% for name, weight in weights.items() %}
+            <tr>
+              <td>{{ name }}</td>
+              <td>{{ "%.2f"|format(weight) }}</td>
+              <td><div class="weight-bar"><span style="width: {{ (weight * 100)|round(0, 'floor') }}%"></span></div></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-kicker">At a glance</div>
+        <div class="card-header">
+          <h2>Monitoring snapshot</h2>
+          <div class="helper">Use this section to sanity-check whether the query is too narrow, too broad, or over-tilted toward one source.</div>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Total records</div>
+            <div class="metric-value">{{ papers|length }}</div>
+            <div class="metric-foot">Normalized and deduplicated papers included in this report.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Top highlight count</div>
+            <div class="metric-value">{{ highlights|length }}</div>
+            <div class="metric-foot">Fast-scan shortlist for immediate reading.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">PubMed in top list</div>
+            <div class="metric-value">{{ papers|selectattr("source", "equalto", "pubmed")|list|length }}</div>
+            <div class="metric-foot">Structured biomedical records from NCBI.</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">arXiv in top list</div>
+            <div class="metric-value">{{ papers|selectattr("source", "equalto", "arxiv")|list|length }}</div>
+            <div class="metric-foot">Recent preprints surfaced through the official arXiv API.</div>
+          </div>
+        </div>
+      </div>
+
+      {% if chart_html_fragment %}
+      <div class="card">
+        <div class="section-kicker">Recent activity</div>
+        <div class="card-header">
+          <h2>Publication trend</h2>
+          <div class="helper">Daily stacked counts plus a 7-day rolling mean for a cleaner sense of momentum.</div>
+        </div>
+        <div class="trend-frame">
+          {{ chart_html_fragment | safe }}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="card">
+        <div class="section-kicker">Shortlist</div>
+        <div class="card-header">
+          <h2>Top highlights</h2>
+          <div class="helper">These cards are tuned for presentation use: title, provenance, ranking score, and one-sentence methodological gist.</div>
+        </div>
+        <div class="highlight-grid">
+          {% for p in highlights %}
+          <div class="highlight-card">
+            <div class="meta">
+              <span class="chip source-{{ p.source }}">{{ p.source }}</span>
+              <span>{{ p.published }}</span>
+              <span>score {{ "%.3f"|format(p.final_score) }}</span>
+            </div>
+            <h3 class="paper-title">
+              <a href="{{ p.url }}" target="_blank" rel="noopener">{{ p.title }}</a>
+            </h3>
+            {% if p.journal_or_category %}
+            <div class="small"><strong>Venue:</strong> {{ p.journal_or_category }}</div>
+            {% endif %}
+            <div class="abstract-callout">{{ p.method_innovation_one_liner }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-kicker">Detailed ranking</div>
+        <div class="card-header">
+          <h2>Ranked papers</h2>
+          <div class="helper">Each paper includes a compact score breakdown so you can see why it rose or fell after weight changes.</div>
+        </div>
+        {% for p in papers %}
+        <div class="paper-item">
+          <div class="meta">
+            <span class="chip source-{{ p.source }}">{{ p.source }}</span>
+            <span>{{ p.published }}</span>
+            <span>score {{ "%.3f"|format(p.final_score) }}</span>
+            {% if p.journal_or_category %}<span>{{ p.journal_or_category }}</span>{% endif %}
+          </div>
+          <h3 class="paper-title">
+            <a href="{{ p.url }}" target="_blank" rel="noopener">{{ p.title }}</a>
+          </h3>
+          <div class="small"><strong>Authors:</strong> {{ p.authors[:8]|join(", ") }}</div>
+          <div class="abstract-callout">{{ p.method_innovation_one_liner }}</div>
+          {% if p.matched_terms %}
+          <div class="chip-row">
+            {% for term in p.matched_terms[:8] %}
+              <span class="chip">{{ term }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="score-box">
+            <div class="score-pill"><div>Relevance</div><div>{{ "%.2f"|format(p.relevance_score) }}</div></div>
+            <div class="score-pill"><div>Coverage</div><div>{{ "%.2f"|format(p.coverage_score) }}</div></div>
+            <div class="score-pill"><div>Freshness</div><div>{{ "%.2f"|format(p.freshness_score) }}</div></div>
+            <div class="score-pill"><div>Evidence</div><div>{{ "%.2f"|format(p.evidence_score) }}</div></div>
+            <div class="score-pill"><div>Source</div><div>{{ "%.2f"|format(p.source_score) }}</div></div>
+            <div class="score-pill"><div>Completeness</div><div>{{ "%.2f"|format(p.completeness_score) }}</div></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Built from official PubMed, MeSH, and arXiv interfaces. Ranking is a transparent prioritization rule, not a claim of universal authority.
+    </div>
+  </main>
+</body>
+</html>

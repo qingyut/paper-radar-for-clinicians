@@ -1,0 +1,133 @@
+{
+  "keyword": "(gallbladder) AND (multimodal)",
+  "days": 30,
+  "expanded_query": {
+    "original_keyword": "(gallbladder) AND (multimodal)",
+    "mesh_descriptor": null,
+    "mesh_uri": null,
+    "mesh_terms": [
+      "Gallbladder",
+      "Gallbladders",
+      "Multimodal Imaging",
+      "Imaging, Hybrid",
+      "Hybrid Imaging",
+      "Imaging, Multimodal"
+    ],
+    "free_terms": [
+      "gallbladder",
+      "multimodal"
+    ],
+    "pubmed_query": "(\"Gallbladder\"[MeSH Terms] OR \"Gallbladder\"[Title/Abstract] OR \"Gallbladders\"[Title/Abstract]) AND (\"Multimodal Imaging\"[MeSH Terms] OR \"Multimodal Imaging\"[Title/Abstract] OR \"Imaging, Hybrid\"[Title/Abstract] OR \"Hybrid Imaging\"[Title/Abstract] OR \"Imaging, Multimodal\"[Title/Abstract])",
+    "arxiv_query": "((ti:%22Gallbladder%22+OR+abs:%22Gallbladder%22)+OR+(ti:%22Gallbladders%22+OR+abs:%22Gallbladders%22))+AND+((ti:%22Multimodal+Imaging%22+OR+abs:%22Multimodal+Imaging%22)+OR+(ti:%22Imaging%2C+Hybrid%22+OR+abs:%22Imaging%2C+Hybrid%22)+OR+(ti:%22Hybrid+Imaging%22+OR+abs:%22Hybrid+Imaging%22)+OR+(ti:%22Imaging%2C+Multimodal%22+OR+abs:%22Imaging%2C+Multimodal%22))",
+    "query_mode": "grouped",
+    "parsed_groups": [
+      [
+        "gallbladder"
+      ],
+      [
+        "multimodal"
+      ]
+    ],
+    "expanded_groups": [
+      {
+        "original_terms": [
+          "gallbladder"
+        ],
+        "mesh_descriptors": [
+          "Gallbladder"
+        ],
+        "mesh_terms": [
+          "Gallbladder",
+          "Gallbladders"
+        ],
+        "free_terms": [
+          "gallbladder"
+        ],
+        "pubmed_clause": "(\"Gallbladder\"[MeSH Terms] OR \"Gallbladder\"[Title/Abstract] OR \"Gallbladders\"[Title/Abstract])",
+        "arxiv_clause": "((ti:%22Gallbladder%22+OR+abs:%22Gallbladder%22)+OR+(ti:%22Gallbladders%22+OR+abs:%22Gallbladders%22))",
+        "leaf_expansions": [
+          {
+            "original_term": "gallbladder",
+            "mesh_descriptor": "Gallbladder",
+            "mesh_uri": "http://id.nlm.nih.gov/mesh/D005704",
+            "mesh_terms": [
+              "Gallbladder",
+              "Gallbladders"
+            ],
+            "free_terms": [
+              "gallbladder"
+            ],
+            "pubmed_terms": [
+              "\"Gallbladder\"[MeSH Terms]",
+              "\"Gallbladder\"[Title/Abstract]",
+              "\"Gallbladders\"[Title/Abstract]"
+            ],
+            "arxiv_terms": [
+              "(ti:%22Gallbladder%22+OR+abs:%22Gallbladder%22)",
+              "(ti:%22Gallbladders%22+OR+abs:%22Gallbladders%22)"
+            ]
+          }
+        ]
+      },
+      {
+        "original_terms": [
+          "multimodal"
+        ],
+        "mesh_descriptors": [
+          "Multimodal Imaging"
+        ],
+        "mesh_terms": [
+          "Multimodal Imaging",
+          "Imaging, Hybrid",
+          "Hybrid Imaging",
+          "Imaging, Multimodal"
+        ],
+        "free_terms": [
+          "multimodal"
+        ],
+        "pubmed_clause": "(\"Multimodal Imaging\"[MeSH Terms] OR \"Multimodal Imaging\"[Title/Abstract] OR \"Imaging, Hybrid\"[Title/Abstract] OR \"Hybrid Imaging\"[Title/Abstract] OR \"Imaging, Multimodal\"[Title/Abstract])",
+        "arxiv_clause": "((ti:%22Multimodal+Imaging%22+OR+abs:%22Multimodal+Imaging%22)+OR+(ti:%22Imaging%2C+Hybrid%22+OR+abs:%22Imaging%2C+Hybrid%22)+OR+(ti:%22Hybrid+Imaging%22+OR+abs:%22Hybrid+Imaging%22)+OR+(ti:%22Imaging%2C+Multimodal%22+OR+abs:%22Imaging%2C+Multimodal%22))",
+        "leaf_expansions": [
+          {
+            "original_term": "multimodal",
+            "mesh_descriptor": "Multimodal Imaging",
+            "mesh_uri": "http://id.nlm.nih.gov/mesh/D064847",
+            "mesh_terms": [
+              "Multimodal Imaging",
+              "Imaging, Hybrid",
+              "Hybrid Imaging",
+              "Imaging, Multimodal"
+            ],
+            "free_terms": [
+              "multimodal"
+            ],
+            "pubmed_terms": [
+              "\"Multimodal Imaging\"[MeSH Terms]",
+              "\"Multimodal Imaging\"[Title/Abstract]",
+              "\"Imaging, Hybrid\"[Title/Abstract]",
+              "\"Hybrid Imaging\"[Title/Abstract]",
+              "\"Imaging, Multimodal\"[Title/Abstract]"
+            ],
+            "arxiv_terms": [
+              "(ti:%22Multimodal+Imaging%22+OR+abs:%22Multimodal+Imaging%22)",
+              "(ti:%22Imaging%2C+Hybrid%22+OR+abs:%22Imaging%2C+Hybrid%22)",
+              "(ti:%22Hybrid+Imaging%22+OR+abs:%22Hybrid+Imaging%22)",
+              "(ti:%22Imaging%2C+Multimodal%22+OR+abs:%22Imaging%2C+Multimodal%22)"
+            ]
+          }
+        ]
+      }
+    ],
+    "mesh_descriptors": [
+      "Gallbladder",
+      "Multimodal Imaging"
+    ]
+  },
+  "n_records": 3,
+  "generated_at_utc": "2026-04-10T13:35:45.621860+00:00",
+  "files": {
+    "csv": "papers.csv",
+    "report_html": "report.html",
+    "report_md": "report.md"
+  }
+}

@@ -1,0 +1,69 @@
+ranking:
+  weights:
+    relevance: 0.50
+    coverage: 0.18
+    freshness: 0.14
+    evidence: 0.10
+    source: 0.06
+    completeness: 0.02
+
+  coverage_hit_threshold: 0.55
+
+  source_priors:
+    pubmed: 0.88
+    arxiv: 0.52
+
+  publication_type_scores:
+    guideline: 1.00
+    practice guideline: 1.00
+    systematic review: 0.96
+    meta-analysis: 0.96
+    randomized controlled trial: 0.92
+    clinical trial: 0.84
+    multicenter study: 0.82
+    cohort study: 0.76
+    validation study: 0.75
+    comparative study: 0.72
+    observational study: 0.68
+    review: 0.65
+    consensus development conference: 0.64
+    case-control study: 0.61
+    case series: 0.50
+    case reports: 0.38
+    editorial: 0.22
+    comment: 0.18
+    letter: 0.16
+    preprint: 0.46
+
+  heuristic_text_boosts:
+    prospective: 0.10
+    retrospective: 0.05
+    multicenter: 0.08
+    multi-center: 0.08
+    externally validated: 0.10
+    external validation: 0.10
+    benchmark: 0.06
+    randomized: 0.10
+    double-blind: 0.08
+    meta-analysis: 0.10
+    systematic review: 0.10
+    first-in-human: 0.06
+    ablation study: 0.05
+    code available: 0.04
+    open-source: 0.04
+
+reporting:
+  top_n_in_report: 20
+  top_n_highlight: 8
+
+visual:
+  theme:
+    background: "#0b1220"
+    card: "#111a2b"
+    paper: "#ffffff"
+    text_dark: "#0f172a"
+    text_muted: "#475569"
+    pubmed: "#1d4ed8"
+    arxiv: "#7c3aed"
+    total: "#0f172a"
+    accent: "#0f766e"
